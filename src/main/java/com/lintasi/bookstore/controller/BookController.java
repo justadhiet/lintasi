@@ -1,5 +1,6 @@
 package com.lintasi.bookstore.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lintasi.bookstore.model.BookModel;
+import com.lintasi.bookstore.response.BookResponse;
 import com.lintasi.bookstore.service.BookService;
 
 @RestController
@@ -24,8 +26,12 @@ public class BookController {
 	BookService bookService;
 	
 	@GetMapping("")
-	public List<BookModel> list(){
-		return bookService.listAllBook();
+	public List<BookResponse> list(){
+		List<BookResponse> result = new ArrayList<BookResponse>();
+		for (BookModel model : bookService.listAllBook()) {
+			result.add(getResponseFromModel(model));
+		};
+		return result;
 	}
 	
 	@GetMapping("/{id}")
@@ -46,5 +52,13 @@ public class BookController {
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Integer id) {
 		bookService.deleteBook(id);
+	}
+	
+	private BookResponse getResponseFromModel(BookModel model) {
+		BookResponse response = new BookResponse();
+		response.setBookModel(model);
+		response.setFavorite(bookService.countFavoriteBook(model.getBookId()));
+		response.setRecomended(bookService.countRecomendedBook(model.getBookId()));
+		return response;
 	}
 }

@@ -32,4 +32,12 @@ public class BookService {
 	public void deleteBook(Integer id) {
 		bookRepository.deleteById(id);
 	}
+	
+	public long countRecomendedBook(Integer id) {
+		return bookRepository.countRecommended(id);
+	}
+	
+	public long countFavoriteBook(Integer id) {
+		return bookRepository.countFavorite(id);
+	}
 }
