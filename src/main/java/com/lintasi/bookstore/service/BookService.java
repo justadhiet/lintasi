@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lintasi.bookstore.model.BookModel;
+import com.lintasi.bookstore.model.Book;
 import com.lintasi.bookstore.repository.BookRepository;
 
 @Service
@@ -17,15 +17,15 @@ public class BookService {
 	@Autowired
 	private BookRepository bookRepository;
 	
-	public List<BookModel> listAllBook(){
+	public List<Book> listAllBook(){
 		return bookRepository.findAll();
 	}
 	
-	public void saveBook(BookModel book) {
+	public void saveBook(Book book) {
 		bookRepository.save(book);
 	}
 	
-	public BookModel getBook(Integer id) {
+	public Book getBook(Integer id) {
 		return bookRepository.findById(id).get();
 	}
 	

@@ -15,39 +15,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lintasi.bookstore.model.BookModel;
-import com.lintasi.bookstore.response.BookResponse;
+import com.lintasi.bookstore.model.Book;
+import com.lintasi.bookstore.payload.response.BookResponse;
 import com.lintasi.bookstore.service.BookService;
+import com.lintasi.bookstore.service.PricingService;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 
 	@Autowired
 	BookService bookService;
+	@Autowired
+	PricingService pricingService;
 	
 	@GetMapping("")
 	public List<BookResponse> list(){
 		List<BookResponse> result = new ArrayList<BookResponse>();
-		for (BookModel model : bookService.listAllBook()) {
+		for (Book model : bookService.listAllBook()) {
 			result.add(getResponseFromModel(model));
 		};
 		return result;
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<BookModel> get(@PathVariable Integer id){
+	public ResponseEntity<Book> get(@PathVariable Integer id){
 		try {
-			BookModel book = bookService.getBook(id);
-			return new ResponseEntity<BookModel>(book, HttpStatus.OK);
+			Book book = bookService.getBook(id);
+			return new ResponseEntity<Book>(book, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<BookModel>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
 	@PostMapping("")
-	public void add(@RequestBody BookModel book) {
+	public void add(@RequestBody Book book) {
 		bookService.saveBook(book);
 	}
 	
@@ -56,11 +59,12 @@ public class BookController {
 		bookService.deleteBook(id);
 	}
 	
-	private BookResponse getResponseFromModel(BookModel model) {
+	private BookResponse getResponseFromModel(Book model) {
 		BookResponse response = new BookResponse();
 		response.setBookModel(model);
 		response.setFavorite(bookService.countFavoriteBook(model.getBookId()));
 		response.setRecomended(bookService.countRecomendedBook(model.getBookId()));
+		response.setPricing(pricingService.getPricingByBook(model.getBookId()));
 		return response;
 	}
 }

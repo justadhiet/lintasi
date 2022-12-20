@@ -14,12 +14,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "book")
-public class BookModel {
+public class Book {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int bookId;
-	private byte[] picture;
+	private String picture;
 	private String title;
 	private String isbn;
 	private String description;
@@ -30,14 +30,12 @@ public class BookModel {
 	private String language;
 	private Timestamp publicationDate;
 	
-	@OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
-	private PricingModel pricing;
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<RecomendedModel> recomend;
+	private List<Recomended> recomend;
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<FavoriteModel> favorite;
+	private List<Favorite> favorite;
 
-	public BookModel() {
+	public Book() {
 		
 	}
 
@@ -49,11 +47,11 @@ public class BookModel {
 		this.bookId = bookId;
 	}
 
-	public byte[] getPicture() {
+	public String getPicture() {
 		return picture;
 	}
 
-	public void setPicture(byte[] picture) {
+	public void setPicture(String picture) {
 		this.picture = picture;
 	}
 
@@ -128,15 +126,5 @@ public class BookModel {
 	public void setPublicationDate(Timestamp publicationDate) {
 		this.publicationDate = publicationDate;
 	}
-
-	public PricingModel getPricing() {
-		return pricing;
-	}
-
-	public void setPricing(PricingModel pricing) {
-		this.pricing = pricing;
-	}
-	
-	
 	
 }

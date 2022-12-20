@@ -1,33 +1,30 @@
 package com.lintasi.bookstore.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "pricing")
-public class PricingModel {
+@IdClass(PricingId.class)
+public class Pricing implements Serializable{
 	
 	@Id
 	@Column(name = "book_id")
 	private int bookId;
+	@Id
+	@Column(name = "price")
 	private long price;
-	private String status;
+	private int status;
 	private long discount;
-	private Timestamp timeRange;
-	
-	@OneToOne
-	@PrimaryKeyJoinColumn
-	private BookModel book;
-	
-	public PricingModel() {
-		
-	}
+	private int timeRange;
 
 	public int getBookId() {
 		return bookId;
@@ -45,11 +42,11 @@ public class PricingModel {
 		this.price = price;
 	}
 
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -61,11 +58,11 @@ public class PricingModel {
 		this.discount = discount;
 	}
 
-	public Timestamp getTimeRange() {
+	public int getTimeRange() {
 		return timeRange;
 	}
 
-	public void setTimeRange(Timestamp timeRange) {
+	public void setTimeRange(int timeRange) {
 		this.timeRange = timeRange;
 	}
 	

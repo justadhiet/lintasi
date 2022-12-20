@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lintasi.bookstore.model.RoleModel;
+import com.lintasi.bookstore.model.Role;
 import com.lintasi.bookstore.repository.RoleRepository;
 
 @Service
@@ -17,15 +17,15 @@ public class RoleService {
 	@Autowired
 	private RoleRepository roleRepository;
 	
-	public List<RoleModel> listAllRole(){
+	public List<Role> listAllRole(){
 		return roleRepository.findAll();
 	}
 	
-	public void saveRole(RoleModel role) {
+	public void saveRole(Role role) {
 		roleRepository.save(role);
 	}
 	
-	public RoleModel getRole(Integer id) {
+	public Role getRole(Integer id) {
 		return roleRepository.findById(id).get();
 	}
 	

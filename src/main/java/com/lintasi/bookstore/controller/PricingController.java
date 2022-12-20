@@ -1,10 +1,8 @@
 package com.lintasi.bookstore.controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,35 +12,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lintasi.bookstore.model.Role;
-import com.lintasi.bookstore.service.RoleService;
+import com.lintasi.bookstore.model.Pricing;
+import com.lintasi.bookstore.payload.response.MessageResponse;
+import com.lintasi.bookstore.service.PricingService;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-@RequestMapping("/api/roles")
-public class RoleController {
-	
+@RequestMapping("/api/price")
+public class PricingController {
+
 	@Autowired
-	RoleService roleService;
-	
-	@GetMapping("")
-	public List<Role> list(){
-		return roleService.listAllRole();
-	}
+	PricingService pricingService;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Role> get(@PathVariable Integer id){
-		try {
-			Role role = roleService.getRole(id);
-			return new ResponseEntity<Role>(role, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Role>(HttpStatus.NOT_FOUND);
-		}
+	public List<Pricing> getPriceByBookId(@PathVariable Integer id){
+		return pricingService.getPricingByBook(id);
 	}
 	
 	@PostMapping("")
-	public void add(@RequestBody Role role) {
-		roleService.saveRole(role);
+	public ResponseEntity<?> add(@RequestBody Pricing price) {
+		pricingService.savePricing(price);
+		return ResponseEntity.ok(new MessageResponse("Price inserted successfully!"));
 	}
-
 }

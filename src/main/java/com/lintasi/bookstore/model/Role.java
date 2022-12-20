@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,18 +14,19 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "role")
-public class RoleModel {
+public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idRole;
-	private String nama;
+	@Enumerated(EnumType.STRING)
+	private ERole nama;
 	private String akses;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<UserModel> user;
+	private List<User> user;
 	
-	public RoleModel() {
+	public Role() {
 		
 	}
 
@@ -35,11 +38,11 @@ public class RoleModel {
 		this.idRole = idRole;
 	}
 
-	public String getNama() {
+	public ERole getNama() {
 		return nama;
 	}
 
-	public void setNama(String nama) {
+	public void setNama(ERole nama) {
 		this.nama = nama;
 	}
 

@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "favorite")
-public class FavoriteModel implements Serializable {
+@Table(name = "recomended")
+public class Recomended implements Serializable{
 
 	@Id
 	@Column(name = "book_id")
@@ -20,34 +20,29 @@ public class FavoriteModel implements Serializable {
 	@Id
 	@Column(name = "user_id")
 	private int userId;
-	private Timestamp dateFavorite;
+	private Timestamp recomendTime;
 	
 	@ManyToOne
 	@JoinColumn(name = "book_id")
-	private BookModel books;
-
+	private Book books;
+	
 	public int getBookId() {
 		return bookId;
 	}
-
 	public void setBookId(int bookId) {
 		this.bookId = bookId;
 	}
-
 	public int getUserId() {
 		return userId;
 	}
-
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-
-	public Timestamp getDateFavorite() {
-		return dateFavorite;
+	public Timestamp getRecomendTime() {
+		return recomendTime;
 	}
-
-	public void setDateFavorite(Timestamp dateFavorite) {
-		this.dateFavorite = dateFavorite;
+	public void setRecomendTime(Timestamp recomendTime) {
+		this.recomendTime = recomendTime;
 	}
 	
 	

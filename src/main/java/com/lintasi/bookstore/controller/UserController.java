@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lintasi.bookstore.model.RoleModel;
-import com.lintasi.bookstore.model.UserModel;
-import com.lintasi.bookstore.request.UserRequest;
+import com.lintasi.bookstore.model.Role;
+import com.lintasi.bookstore.model.User;
+import com.lintasi.bookstore.payload.request.UserRequest;
 import com.lintasi.bookstore.service.RoleService;
 import com.lintasi.bookstore.service.UserService;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
 	@Autowired
@@ -34,17 +34,17 @@ public class UserController {
 	RoleService roleService;
 
 	@GetMapping("")
-	public List<UserModel> list() {
+	public List<User> list() {
 		return userService.listAllUser();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<UserModel> get(@PathVariable Integer id) {
+	public ResponseEntity<User> get(@PathVariable Integer id) {
 		try {
-			UserModel user = userService.getUser(id);
-			return new ResponseEntity<UserModel>(user, HttpStatus.OK);
+			User user = userService.getUser(id);
+			return new ResponseEntity<User>(user, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
-			return new ResponseEntity<UserModel>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -56,9 +56,9 @@ public class UserController {
 	@PostMapping("/{id}")
 	public ResponseEntity<?> update(@RequestBody UserRequest user, @PathVariable Integer id){
 		try {
-			UserModel existUser = userService.getUser(id);
+			User existUser = userService.getUser(id);
 			if(existUser!=null) {
-				UserModel update = getUserModelFromRequest(user);
+				User update = getUserModelFromRequest(user);
 				update.setJoinDate(existUser.getJoinDate());
 				update.setIdUser(existUser.getIdUser());
 				userService.saveUser(update);
@@ -75,18 +75,18 @@ public class UserController {
 		userService.deleteUser(id);
 	}
 	
-	private UserModel getUserModelFromRequest(UserRequest param) {
-		UserModel userModel = new UserModel();
-		userModel.setAddress(param.getAddress());
-		userModel.setEmail(param.getEmail());
-		userModel.setName(param.getName());
-		userModel.setNoHp(param.getNoHp());
-		userModel.setUsername(param.getUsername());
-		userModel.setJoinDate(new Timestamp(new Date().getTime()));
+	private User getUserModelFromRequest(UserRequest param) {
+		User user = new User();
+		user.setAddress(param.getAddress());
+		user.setEmail(param.getEmail());
+		user.setName(param.getName());
+		user.setNoHp(param.getNoHp());
+		user.setUsername(param.getUsername());
+		user.setJoinDate(new Timestamp(new Date().getTime()));
 		
-		RoleModel roleModel = roleService.getRole(param.getRoleId());
-		userModel.setIdRole(roleModel);
+		Role role = roleService.getRole(param.getRoleId());
+		user.setRole(role);
 		
-		return userModel;
+		return user;
 	}
 }
