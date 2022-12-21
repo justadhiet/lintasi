@@ -1,0 +1,73 @@
+http://localhost:8080/api/auth/signup
+POST
+{
+    "username": "user1",
+    "password": "user123",
+    "email": "user1@bookstore.com",
+    "role" : "user"
+}
+POST
+{
+    "username": "admin",
+    "password": "admin123",
+    "email": "admin@bookstore.com",
+    "role" : "admin"
+}
+POST
+{
+    "username": "manager",
+    "password": "manager123",
+    "email": "manager@bookstore.com",
+    "role" : "manager"
+}
+POST
+{
+    "username": "editor",
+    "password": "editor123",
+    "email": "editor@bookstore.com",
+    "role" : "editor"
+}
+
+http://localhost:8080/api/auth/signin
+
+POST
+{
+    "username": "user1",
+    "password": "user123"
+}
+POST
+{
+    "username": "admin",
+    "password": "admin123"
+}
+POST
+{
+    "username": "manager",
+    "password": "manager123"
+}
+POST
+{
+    "username": "editor",
+    "password": "editor123"
+}
+RESPONSE
+{
+    "id": 10,
+    "username": "editor",
+    "email": "editor@bookstore.com",
+    "roles": [
+        "ROLE_EDITOR"
+    ],
+    "tokenType": "Bearer",
+    "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlZGl0b3IiLCJpYXQiOjE2NzE1NDE1NTcsImV4cCI6MTY3MTYyNzk1N30.6my0NhVr22ulVpB8rGxYLJcNEvaNk7mNB-G5lE6gca7kSzXvf45F9j06Yfzqz4kGBAkQCPvyeCZnIQW-ZwtFQw"
+}
+
+http://localhost:8080/api/price
+ POST
+ {
+        "bookId": 1,
+        "price": 30000,
+        "status": 1,
+        "discount": 10,
+        "timeRange": 2147483647
+ }
