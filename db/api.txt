@@ -71,3 +71,52 @@ http://localhost:8080/api/price
         "discount": 10,
         "timeRange": 2147483647
  }
+ 
+ http://localhost:8080/api/books
+ GET
+ header:
+ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY3NTU5Mzc4OCwiZXhwIjoxNjc1NjgwMTg4fQ.ac3efb-4iIV01wm2qi04IuYnpqknr1MSYO643-_GW1PYOTO6ufuJf-7VGUT1_g3pJDE1qpj5Dz1pj8qlSkc4jQ
+ 
+ RESPONSE
+ [
+    {
+        "recomended": 0,
+        "favorite": 0,
+        "pricing": [
+            {
+                "bookId": 1,
+                "price": 10000,
+                "status": 0,
+                "discount": 10,
+                "timeRange": 2147483647
+            },
+            {
+                "bookId": 1,
+                "price": 30000,
+                "status": 1,
+                "discount": 10,
+                "timeRange": 2147483647
+            },
+            {
+                "bookId": 1,
+                "price": 50000,
+                "status": 0,
+                "discount": 10,
+                "timeRange": 2147483647
+            }
+        ],
+        "bookModel": {
+            "bookId": 1,
+            "picture": null,
+            "title": "Blink",
+            "isbn": "008877665",
+            "description": "Blink changes the way you'll understand every decision you make. Never again will you think about thinking the same way.",
+            "publisher": "Gramedia",
+            "author": "Malcolm Gladwell",
+            "printLength": "100",
+            "dimension": "50x50",
+            "language": "English",
+            "publicationDate": "2022-11-24T17:00:00.000+00:00"
+        }
+    }
+]
