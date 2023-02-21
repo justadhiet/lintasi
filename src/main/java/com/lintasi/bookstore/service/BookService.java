@@ -26,6 +26,10 @@ public class BookService {
 		return bookRepository.recomendList();
 	}
 	
+	public List<Book> listBookByGenre(Integer id){
+		return bookRepository.findByGenreId(id);
+	}
+	
 	public void saveBook(Book book) {
 		bookRepository.save(book);
 	}

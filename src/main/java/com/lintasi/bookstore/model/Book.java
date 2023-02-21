@@ -24,6 +24,7 @@ public class Book {
 	private String printLength;
 	private String dimension;
 	private String language;
+	private int genreId;
 	private Date publicationDate;
 
 	public Book() {
@@ -116,6 +117,14 @@ public class Book {
 
 	public void setPublicationDate(Date publicationDate) {
 		this.publicationDate = publicationDate;
+	}
+
+	public int getGenreId() {
+		return genreId;
+	}
+
+	public void setGenreId(int genreId) {
+		this.genreId = genreId;
 	}
 	
 }

@@ -20,4 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Integer>{
 			+ " FROM Recomended a inner join Book b on a.bookId = b.bookId GROUP BY a.bookId")
 	List<RecomendCount> recomendList();
 	
+	List<Book> findByGenreId(Integer genreId);
+	
 }

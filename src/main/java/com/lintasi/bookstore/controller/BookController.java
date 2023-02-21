@@ -47,6 +47,11 @@ public class BookController {
 		return bookService.listAllBookRecomend();
 	}
 	
+	@GetMapping("/dash/genre/{id}")
+	public List<Book> listBookByGenre(@PathVariable Integer id){
+		return bookService.listBookByGenre(id);
+	}
+	
 	@GetMapping("/dash/{id}")
 	public ResponseEntity<BookResponse> get(@PathVariable Integer id){
 		try {
