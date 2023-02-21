@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,14 +32,19 @@ public class PricingController {
 	
 	@GetMapping("/{id}/active")
 	public Pricing getActivePrice(@PathVariable int id){
-		return pricingService.getPricingActive(id);
+		List<Pricing> pricing = pricingService.getPricingActive(id);
+		if(pricing.size()>0) {
+			return pricing.get(0);
+		}
+		return new Pricing();
 	}
 	
 	@PostMapping("")
+	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> add(@RequestBody Pricing price) {
-		Pricing pricing = pricingService.getPricingActive(price.getBookId());
-		if(pricing!=null) {
-			pricingService.deactivatePricing(pricing);
+		List<Pricing> pricing = pricingService.getPricingActive(price.getBookId());
+		if(pricing.size()>0) {
+			pricingService.deactivatePricing(pricing.get(0));
 		}
 		pricingService.savePricing(price);
 		return ResponseEntity.ok(new MessageResponse("Price inserted successfully!"));

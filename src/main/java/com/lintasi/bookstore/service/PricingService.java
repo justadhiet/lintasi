@@ -25,12 +25,8 @@ public class PricingService {
 		return pricingRepository.findByBookId(bookid);
 	}
 	
-	public Pricing getPricingActive(Integer bookid) {
-		List<Pricing> pricings = pricingRepository.findByBookIdAndStatus(bookid, 1);
-		if(pricings.size()>0) {
-			return pricings.get(0);
-		}
-		return null;
+	public List<Pricing> getPricingActive(Integer bookid) {
+		return pricingRepository.findByBookIdAndStatus(bookid, 1);
 	}
 	
 	public void savePricing(Pricing price) {

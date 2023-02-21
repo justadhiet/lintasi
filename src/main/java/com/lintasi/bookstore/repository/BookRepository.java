@@ -1,6 +1,5 @@
 package com.lintasi.bookstore.repository;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;

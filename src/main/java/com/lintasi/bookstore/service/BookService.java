@@ -34,8 +34,8 @@ public class BookService {
 		return bookRepository.findById(id).get();
 	}
 	
-	public void deleteBook(Integer id) {
-		bookRepository.deleteById(id);
+	public void deleteBook(Book book) {
+		bookRepository.delete(book);
 	}
 	
 	public long countRecomendedBook(Integer id) {

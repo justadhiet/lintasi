@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lintasi.bookstore.model.Role;
 import com.lintasi.bookstore.model.User;
 import com.lintasi.bookstore.payload.request.UserRequest;
+import com.lintasi.bookstore.payload.response.MessageResponse;
 import com.lintasi.bookstore.service.RoleService;
 import com.lintasi.bookstore.service.UserService;
 
@@ -49,8 +50,13 @@ public class UserController {
 	}
 
 	@PostMapping("/")
-	public void add(@RequestBody UserRequest user) {
-		userService.saveUser(getUserModelFromRequest(user));
+	public ResponseEntity<?> add(@RequestBody UserRequest user) {
+		try {
+			userService.saveUser(getUserModelFromRequest(user));
+			return ResponseEntity.ok(new MessageResponse("User insert successfully!"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: User can't be insert! e:" + e.getMessage()));
+		}
 	}
 	
 	@PostMapping("/{id}")
@@ -61,18 +67,25 @@ public class UserController {
 				User update = getUserModelFromRequest(user);
 				update.setJoinDate(existUser.getJoinDate());
 				update.setIdUser(existUser.getIdUser());
+				update.setPassword(existUser.getPassword());
 				userService.saveUser(update);
-				return new ResponseEntity<>(HttpStatus.OK);
+				return ResponseEntity.ok(new MessageResponse("User update successfully!"));
 			}
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: User doesn't exist!"));
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: User can't be update! e:" + e.getMessage()));
 		}
 	}
 	
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Integer id) {
-		userService.deleteUser(id);
+	public ResponseEntity<?> delete(@PathVariable Integer id) {
+		try {
+			userService.deleteUser(id);
+			return ResponseEntity.ok(new MessageResponse("User delete successfully!"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: User can't be deleted! e:" + e.getMessage()));
+		}
 	}
 	
 	private User getUserModelFromRequest(UserRequest param) {

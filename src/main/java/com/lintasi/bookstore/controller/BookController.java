@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lintasi.bookstore.model.Book;
 import com.lintasi.bookstore.model.RecomendCount;
 import com.lintasi.bookstore.payload.response.BookResponse;
+import com.lintasi.bookstore.payload.response.MessageResponse;
 import com.lintasi.bookstore.service.BookService;
 import com.lintasi.bookstore.service.PricingService;
 
@@ -32,7 +33,7 @@ public class BookController {
 	@Autowired
 	PricingService pricingService;
 	
-	@GetMapping("")
+	@GetMapping("/dash")
 	public List<BookResponse> list(){
 		List<BookResponse> result = new ArrayList<BookResponse>();
 		for (Book model : bookService.listAllBook()) {
@@ -41,30 +42,43 @@ public class BookController {
 		return result;
 	}
 	
-	@GetMapping("/recomend")
+	@GetMapping("/dash/recomend")
 	public List<RecomendCount> listRecomend(){
 		return bookService.listAllBookRecomend();
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Book> get(@PathVariable Integer id){
+	@GetMapping("/dash/{id}")
+	public ResponseEntity<BookResponse> get(@PathVariable Integer id){
 		try {
-			Book book = bookService.getBook(id);
-			return new ResponseEntity<Book>(book, HttpStatus.OK);
+			BookResponse book = getResponseFromModel(bookService.getBook(id));
+			return new ResponseEntity<BookResponse>(book, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<BookResponse>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
 	@PostMapping("")
 	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
-	public void add(@RequestBody Book book) {
-		bookService.saveBook(book);
+	public ResponseEntity<?> add(@RequestBody Book book) {
+		
+		try {
+			bookService.saveBook(book);
+			return ResponseEntity.ok(new MessageResponse("Book inserted successfully!"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Book can't be inserted! e:" + e.getMessage()));
+		}
 	}
 	
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Integer id) {
-		bookService.deleteBook(id);
+	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> delete(@PathVariable Integer id) {
+		try {
+			bookService.deleteBook(bookService.getBook(id));
+			return ResponseEntity.ok(new MessageResponse("Book deleted successfully!"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Book can't be delete! e:" + e.getMessage()));
+		}
 	}
 	
 	private BookResponse getResponseFromModel(Book model) {
@@ -72,7 +86,7 @@ public class BookController {
 		response.setBookModel(model);
 		response.setFavorite(bookService.countFavoriteBook(model.getBookId()));
 		response.setRecomended(bookService.countRecomendedBook(model.getBookId()));
-		response.setPricing(pricingService.getPricingByBook(model.getBookId()));
+		response.setPricing(pricingService.getPricingActive(model.getBookId()));
 		return response;
 	}
 }
