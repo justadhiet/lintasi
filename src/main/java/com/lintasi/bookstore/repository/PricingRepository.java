@@ -10,5 +10,6 @@ import com.lintasi.bookstore.model.Pricing;
 public interface PricingRepository extends JpaRepository<Pricing, PricingId>{
 	
 	List<Pricing> findByBookId(Integer bookid);
+	List<Pricing> findByBookIdAndStatus(int bookid, int status);
 
 }

@@ -1,6 +1,7 @@
 package com.lintasi.bookstore.model;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -28,7 +29,7 @@ public class Book {
 	private String printLength;
 	private String dimension;
 	private String language;
-	private Timestamp publicationDate;
+	private Date publicationDate;
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Recomended> recomend;
@@ -38,7 +39,7 @@ public class Book {
 	public Book() {
 		
 	}
-
+	
 	public int getBookId() {
 		return bookId;
 	}
@@ -119,11 +120,11 @@ public class Book {
 		this.language = language;
 	}
 
-	public Timestamp getPublicationDate() {
+	public Date getPublicationDate() {
 		return publicationDate;
 	}
 
-	public void setPublicationDate(Timestamp publicationDate) {
+	public void setPublicationDate(Date publicationDate) {
 		this.publicationDate = publicationDate;
 	}
 	

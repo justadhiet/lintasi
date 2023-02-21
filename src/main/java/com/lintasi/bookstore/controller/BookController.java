@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lintasi.bookstore.model.Book;
+import com.lintasi.bookstore.model.RecomendCount;
 import com.lintasi.bookstore.payload.response.BookResponse;
 import com.lintasi.bookstore.service.BookService;
 import com.lintasi.bookstore.service.PricingService;
@@ -38,6 +39,11 @@ public class BookController {
 			result.add(getResponseFromModel(model));
 		};
 		return result;
+	}
+	
+	@GetMapping("/recomend")
+	public List<RecomendCount> listRecomend(){
+		return bookService.listAllBookRecomend();
 	}
 	
 	@GetMapping("/{id}")

@@ -6,12 +6,14 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "recomended")
+@IdClass(RecomendedId.class)
 public class Recomended implements Serializable{
 
 	@Id
@@ -21,10 +23,6 @@ public class Recomended implements Serializable{
 	@Column(name = "user_id")
 	private int userId;
 	private Timestamp recomendTime;
-	
-	@ManyToOne
-	@JoinColumn(name = "book_id")
-	private Book books;
 	
 	public int getBookId() {
 		return bookId;

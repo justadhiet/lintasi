@@ -29,8 +29,17 @@ public class PricingController {
 		return pricingService.getPricingByBook(id);
 	}
 	
+	@GetMapping("/{id}/active")
+	public Pricing getActivePrice(@PathVariable int id){
+		return pricingService.getPricingActive(id);
+	}
+	
 	@PostMapping("")
 	public ResponseEntity<?> add(@RequestBody Pricing price) {
+		Pricing pricing = pricingService.getPricingActive(price.getBookId());
+		if(pricing!=null) {
+			pricingService.deactivatePricing(pricing);
+		}
 		pricingService.savePricing(price);
 		return ResponseEntity.ok(new MessageResponse("Price inserted successfully!"));
 	}
