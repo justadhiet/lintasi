@@ -61,7 +61,6 @@ public class BookController {
 			LocalDate lastDayOfMonth = now.with(TemporalAdjusters.lastDayOfMonth());
 			Date startDate = Date.from(now.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			Date endDate = Date.from(lastDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			System.out.println("DATE::" + startDate.toString() + ":::" + endDate.toString() );
 			return bookService.listBookRecomendByMonth(startDate, endDate);
 		} catch (Exception e) {
 			return null;
