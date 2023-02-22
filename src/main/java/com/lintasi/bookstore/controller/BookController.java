@@ -1,6 +1,12 @@
 package com.lintasi.bookstore.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +51,21 @@ public class BookController {
 	@GetMapping("/dash/recomend")
 	public List<RecomendCount> listRecomend(){
 		return bookService.listAllBookRecomend();
+	}
+	
+	@GetMapping("/dash/recomendMonth/{id}")
+	public List<RecomendCount> listRecomendByMonth(@PathVariable String id) {
+		try {
+			String date = "01/" + id.substring(4, 6) + "/" + id.substring(0, 4);
+			LocalDate now =  LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			LocalDate lastDayOfMonth = now.with(TemporalAdjusters.lastDayOfMonth());
+			Date startDate = Date.from(now.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date endDate = Date.from(lastDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			System.out.println("DATE::" + startDate.toString() + ":::" + endDate.toString() );
+			return bookService.listBookRecomendByMonth(startDate, endDate);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	@GetMapping("/dash/genre/{id}")

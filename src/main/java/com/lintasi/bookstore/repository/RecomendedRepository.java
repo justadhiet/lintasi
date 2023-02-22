@@ -10,4 +10,5 @@ import com.lintasi.bookstore.model.RecomendedId;
 public interface RecomendedRepository extends JpaRepository<Recomended, RecomendedId> {
 	
 	List<Recomended> findByBookId(Integer bookid);
+	List<Recomended> findByUserId(Integer userId);
 }

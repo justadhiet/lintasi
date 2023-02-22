@@ -1,5 +1,6 @@
 package com.lintasi.bookstore.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,10 @@ public class BookService {
 	
 	public List<RecomendCount> listAllBookRecomend(){
 		return bookRepository.recomendList();
+	}
+	
+	public List<RecomendCount> listBookRecomendByMonth(Date startDate, Date endDate){
+		return bookRepository.recomendListByMonth(startDate, endDate);
 	}
 	
 	public List<Book> listBookByGenre(Integer id){

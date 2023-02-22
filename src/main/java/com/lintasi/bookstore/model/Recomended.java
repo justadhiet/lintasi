@@ -2,6 +2,7 @@ package com.lintasi.bookstore.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ public class Recomended implements Serializable{
 	@Id
 	@Column(name = "user_id")
 	private int userId;
-	private Timestamp recomendTime;
+	private Date recomendTime;
 	
 	public int getBookId() {
 		return bookId;
@@ -36,10 +37,10 @@ public class Recomended implements Serializable{
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public Timestamp getRecomendTime() {
+	public Date getRecomendTime() {
 		return recomendTime;
 	}
-	public void setRecomendTime(Timestamp recomendTime) {
+	public void setRecomendTime(Date recomendTime) {
 		this.recomendTime = recomendTime;
 	}
 	
