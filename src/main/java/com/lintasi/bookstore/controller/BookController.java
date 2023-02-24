@@ -73,8 +73,13 @@ public class BookController {
 	}
 	
 	@GetMapping("/dash/{id}")
-	public BookResponse get(@PathVariable Integer id) {
-		return getResponseFromModel(bookService.getBook(id));
+	public ResponseEntity<BookResponse> get(@PathVariable Integer id){
+		try {
+			BookResponse book = getResponseFromModel(bookService.getBook(id));
+			return new ResponseEntity<BookResponse>(book, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<BookResponse>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PostMapping("")

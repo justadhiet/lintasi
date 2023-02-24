@@ -37,12 +37,6 @@ public class BookResponse {
 	public void setPricing(List<Pricing> pricing) {
 		this.pricing = pricing;
 	}
-	public Book getBook() {
-		return book;
-	}
-	public void setBook(Book book) {
-		this.book = book;
-	}
 	public Double getRate() {
 		return rate;
 	}
