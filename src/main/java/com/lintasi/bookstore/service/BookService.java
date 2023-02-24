@@ -54,4 +54,8 @@ public class BookService {
 	public long countFavoriteBook(Integer id) {
 		return bookRepository.countFavorite(id);
 	}
+	
+	public Double countRateBook(Integer id) {
+		return bookRepository.countRate(id);
+	}
 }

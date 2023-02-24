@@ -26,6 +26,10 @@ public class RecomendedService {
 		return recomendedRepository.findByBookId(bookid);
 	}
 	
+	public List<Recomended> getRecomendedByUser(Integer userid){
+		return recomendedRepository.findByUserId(userid);
+	}
+	
 	public void saveRecomended(Recomended recomended) {
 		recomendedRepository.save(recomended);
 	}
@@ -34,7 +38,7 @@ public class RecomendedService {
 		 return recomendedRepository.findById(new RecomendedId(bookid,userId)).get();
 	}
 	
-	public void deletePricing(int bookid, int userId) {
+	public void deleteRecomended(int bookid, int userId) {
 		recomendedRepository.deleteById(new RecomendedId(bookid,userId));
 	}
 	

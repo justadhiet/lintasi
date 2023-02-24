@@ -111,6 +111,7 @@ public class BookController {
 		response.setBookModel(model);
 		response.setFavorite(bookService.countFavoriteBook(model.getBookId()));
 		response.setRecomended(bookService.countRecomendedBook(model.getBookId()));
+		response.setRate(bookService.countRateBook(model.getBookId()));
 		response.setPricing(pricingService.getPricingActive(model.getBookId()));
 		return response;
 	}

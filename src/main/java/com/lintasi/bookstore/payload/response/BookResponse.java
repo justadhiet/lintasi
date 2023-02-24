@@ -9,6 +9,7 @@ public class BookResponse {
 
 	private Book book;
 	private long recomended;
+	private Double rate;
 	private long favorite;
 	private List<Pricing> pricing;
 	
@@ -35,6 +36,19 @@ public class BookResponse {
 	}
 	public void setPricing(List<Pricing> pricing) {
 		this.pricing = pricing;
+	}
+	public Book getBook() {
+		return book;
+	}
+	public void setBook(Book book) {
+		this.book = book;
+	}
+	public Double getRate() {
+		return rate;
+	}
+	public void setRate(Double rate) {
+		this.rate = rate;
 	}	
+	
 	
 }
