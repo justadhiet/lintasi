@@ -44,7 +44,7 @@ public class BookController {
 		List<BookResponse> result = new ArrayList<BookResponse>();
 		for (Book model : bookService.listAllBook()) {
 			result.add(getResponseFromModel(model));
-		};
+		}
 		return result;
 	}
 	
@@ -73,13 +73,8 @@ public class BookController {
 	}
 	
 	@GetMapping("/dash/{id}")
-	public ResponseEntity<BookResponse> get(@PathVariable Integer id){
-		try {
-			BookResponse book = getResponseFromModel(bookService.getBook(id));
-			return new ResponseEntity<BookResponse>(book, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<BookResponse>(HttpStatus.NOT_FOUND);
-		}
+	public BookResponse get(@PathVariable Integer id) {
+		return getResponseFromModel(bookService.getBook(id));
 	}
 	
 	@PostMapping("")
