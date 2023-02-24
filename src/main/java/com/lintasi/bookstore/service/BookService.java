@@ -56,6 +56,10 @@ public class BookService {
 	}
 	
 	public Double countRateBook(Integer id) {
-		return bookRepository.countRate(id);
+		Double res = bookRepository.countRate(id);
+		if(res!=null) {
+			return res;
+		}
+		return 0.0;
 	}
 }
