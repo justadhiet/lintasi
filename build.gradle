@@ -6,10 +6,13 @@ plugins {
 
 group = 'com.lintasi'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
 
 repositories {
 	mavenCentral()
+}
+
+bootRun {
+   systemProperties = System.properties
 }
 
 dependencies {

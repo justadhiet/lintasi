@@ -16,25 +16,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class FileStorageService {
 
-    private final Path fileStorageLocation;
-
+    private Path fileStorageLocation;
+    private String type;
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
-                .toAbsolutePath().normalize();
-
-        try {
-            Files.createDirectories(this.fileStorageLocation);
-        } catch (Exception ex) {
-            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
-        }
-    }
+    FileStorageProperties fileStorageProperties;
 
     public String storeFile(MultipartFile file) {
         // Normalize file name
+    	this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir(type)).toAbsolutePath().normalize();
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
@@ -55,6 +50,7 @@ public class FileStorageService {
 
     public Resource loadFileAsResource(String fileName) {
         try {
+        	this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir(type)).toAbsolutePath().normalize();
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
@@ -66,4 +62,13 @@ public class FileStorageService {
             throw new MyFileNotFoundException("File not found " + fileName, ex);
         }
     }
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+    
 }

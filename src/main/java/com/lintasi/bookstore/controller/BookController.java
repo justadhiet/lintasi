@@ -20,13 +20,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.lintasi.bookstore.model.Book;
 import com.lintasi.bookstore.model.RecomendCount;
 import com.lintasi.bookstore.payload.response.BookResponse;
 import com.lintasi.bookstore.payload.response.MessageResponse;
+import com.lintasi.bookstore.payload.response.UploadFileResponse;
 import com.lintasi.bookstore.service.BookService;
+import com.lintasi.bookstore.service.FileStorageService;
 import com.lintasi.bookstore.service.PricingService;
 
 @CrossOrigin(maxAge = 3600)
@@ -38,6 +43,8 @@ public class BookController {
 	BookService bookService;
 	@Autowired
 	PricingService pricingService;
+	@Autowired
+	FileStorageService fileStorageService;
 	
 	@GetMapping("/dash")
 	public List<BookResponse> list(){
@@ -103,6 +110,24 @@ public class BookController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Book can't be delete! e:" + e.getMessage()));
+		}
+	}
+	
+	@PostMapping("/uploadImage")
+	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
+	public ResponseEntity<UploadFileResponse> upload(@RequestParam("image") MultipartFile file) {
+		try {
+			fileStorageService.setType("cover");
+			String fileName = fileStorageService.storeFile(file);
+
+			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+					.path("/api/files/downloadFile/cover/").path(fileName).toUriString();
+
+			UploadFileResponse res = new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(),
+					file.getSize());
+			return new ResponseEntity<UploadFileResponse>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<UploadFileResponse>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
