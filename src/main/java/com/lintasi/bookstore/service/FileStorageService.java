@@ -11,10 +11,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -39,11 +42,14 @@ public class FileStorageService {
             }
 
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            String tfN = generatedString() + "." + getExtensionByStringHandling(fileName);
+            System.out.println(tfN);
+            Path targetLocation = this.fileStorageLocation.resolve(tfN);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return fileName;
-        } catch (IOException ex) {
+            return tfN;
+        } catch (Exception ex) {
+        	ex.printStackTrace();
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
@@ -69,6 +75,25 @@ public class FileStorageService {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	private String generatedString() {
+		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		StringBuilder salt = new StringBuilder();
+		Random rnd = new Random();
+		while (salt.length() < 18) { // length of the random string.
+			int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+			salt.append(SALTCHARS.charAt(index));
+		}
+		String saltStr = salt.toString();
+		return saltStr;
+	}
+	
+	public String getExtensionByStringHandling(String filename) {
+	    Optional<String> s = Optional.ofNullable(filename)
+	      .filter(f -> f.contains("."))
+	      .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+	    return s.get();
 	}
     
 }

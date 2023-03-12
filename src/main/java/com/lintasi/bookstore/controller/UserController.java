@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.lintasi.bookstore.model.Book;
 import com.lintasi.bookstore.model.Role;
 import com.lintasi.bookstore.model.User;
 import com.lintasi.bookstore.payload.request.UserRequest;
 import com.lintasi.bookstore.payload.response.MessageResponse;
+import com.lintasi.bookstore.payload.response.UploadFileResponse;
+import com.lintasi.bookstore.service.FileStorageService;
 import com.lintasi.bookstore.service.RoleService;
 import com.lintasi.bookstore.service.UserService;
 
@@ -33,6 +40,8 @@ public class UserController {
 	UserService userService;
 	@Autowired
 	RoleService roleService;
+	@Autowired
+	FileStorageService fileStorageService;
 
 	@GetMapping("")
 	public List<User> list() {
@@ -50,6 +59,7 @@ public class UserController {
 	}
 
 	@PostMapping("/")
+	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> add(@RequestBody UserRequest user) {
 		try {
 			userService.saveUser(getUserModelFromRequest(user));
@@ -60,6 +70,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/{id}")
+	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> update(@RequestBody UserRequest user, @PathVariable Integer id){
 		try {
 			User existUser = userService.getUser(id);
@@ -78,7 +89,32 @@ public class UserController {
 		}
 	}
 	
+	@PostMapping("/uploadImage/{id}")
+	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
+	public ResponseEntity<UploadFileResponse> upload(@PathVariable Integer id, @RequestParam("image") MultipartFile file) {
+		try {
+			User user = userService.getUser(id);
+			if (user != null) {
+				fileStorageService.setType("cover");
+				String fileName = fileStorageService.storeFile(file);
+
+				String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+						.path("/api/files/downloadFile/cover/").path(fileName).toUriString();
+//				user.setPicture(fileDownloadUri);
+				userService.saveUser(user);
+				
+				UploadFileResponse res = new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(),
+						file.getSize());
+				return new ResponseEntity<UploadFileResponse>(res, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<UploadFileResponse>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<UploadFileResponse>(HttpStatus.NOT_FOUND);
+	}
+	
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> delete(@PathVariable Integer id) {
 		try {
 			userService.deleteUser(id);

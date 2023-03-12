@@ -113,22 +113,28 @@ public class BookController {
 		}
 	}
 	
-	@PostMapping("/uploadImage")
+	@PostMapping("/uploadImage/{id}")
 	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
-	public ResponseEntity<UploadFileResponse> upload(@RequestParam("image") MultipartFile file) {
+	public ResponseEntity<UploadFileResponse> upload(@PathVariable Integer id, @RequestParam("image") MultipartFile file) {
 		try {
-			fileStorageService.setType("cover");
-			String fileName = fileStorageService.storeFile(file);
+			Book book = bookService.getBook(id);
+			if (book != null) {
+				fileStorageService.setType("cover");
+				String fileName = fileStorageService.storeFile(file);
 
-			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-					.path("/api/files/downloadFile/cover/").path(fileName).toUriString();
-
-			UploadFileResponse res = new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(),
-					file.getSize());
-			return new ResponseEntity<UploadFileResponse>(res, HttpStatus.OK);
+				String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+						.path("/api/files/downloadFile/cover/").path(fileName).toUriString();
+				book.setPicture(fileDownloadUri);
+				bookService.saveBook(book);
+				
+				UploadFileResponse res = new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(),
+						file.getSize());
+				return new ResponseEntity<UploadFileResponse>(res, HttpStatus.OK);
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<UploadFileResponse>(HttpStatus.NOT_FOUND);
 		}
+		return new ResponseEntity<UploadFileResponse>(HttpStatus.NOT_FOUND);
 	}
 	
 	private BookResponse getResponseFromModel(Book model) {
