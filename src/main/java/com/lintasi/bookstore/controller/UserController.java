@@ -95,12 +95,12 @@ public class UserController {
 		try {
 			User user = userService.getUser(id);
 			if (user != null) {
-				fileStorageService.setType("cover");
+				fileStorageService.setType("profile");
 				String fileName = fileStorageService.storeFile(file);
 
 				String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-						.path("/api/files/downloadFile/cover/").path(fileName).toUriString();
-//				user.setPicture(fileDownloadUri);
+						.path("/api/files/downloadFile/profile/").path(fileName).toUriString();
+				user.setProfilePicture(fileDownloadUri);
 				userService.saveUser(user);
 				
 				UploadFileResponse res = new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(),

@@ -31,6 +31,7 @@ public class User {
 	private String address;
 	private Timestamp joinDate;
 	private String password;
+	private String profilePicture;
 
 	@ManyToOne
 	@JoinColumn(name = "id_role")
@@ -116,6 +117,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 
 }
