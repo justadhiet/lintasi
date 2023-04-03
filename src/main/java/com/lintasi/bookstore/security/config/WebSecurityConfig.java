@@ -86,6 +86,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/books/dash/**").permitAll()
 				.antMatchers("/api/genre").permitAll()
 				.antMatchers("/api/files/downloadFile/**").permitAll()
+				.antMatchers("/api/review/book/*").permitAll()
 				.anyRequest().authenticated();
 
 		http.authenticationProvider(authenticationProvider());

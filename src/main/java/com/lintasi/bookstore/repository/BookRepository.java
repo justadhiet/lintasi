@@ -17,6 +17,15 @@ public interface BookRepository extends JpaRepository<Book, Integer>{
 	@Query("SELECT COUNT(u) FROM Favorite u WHERE u.bookId=?1")
 	long countFavorite(Integer bookId);
 	
+	@Query("SELECT COUNT(*) FROM Book")
+	long countBooks();
+	
+	@Query("SELECT COUNT(*) FROM Genre")
+	long countGenres();
+	
+	@Query("SELECT COUNT(*) FROM User")
+	long countUsers();
+	
 	@Query("SELECT AVG(u.rate) FROM Review u WHERE u.bookId=?1")
 	Double countRate(Integer bookId);
 	

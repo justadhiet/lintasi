@@ -25,9 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.lintasi.bookstore.exception.MyFileNotFoundException;
 import com.lintasi.bookstore.model.Book;
+import com.lintasi.bookstore.model.DashboardCount;
 import com.lintasi.bookstore.model.RecomendCount;
 import com.lintasi.bookstore.payload.response.BookResponse;
+import com.lintasi.bookstore.payload.response.CommonResponse;
 import com.lintasi.bookstore.payload.response.MessageResponse;
 import com.lintasi.bookstore.payload.response.UploadFileResponse;
 import com.lintasi.bookstore.service.BookService;
@@ -47,58 +50,91 @@ public class BookController {
 	FileStorageService fileStorageService;
 	
 	@GetMapping("/dash")
-	public List<BookResponse> list(){
+	public ResponseEntity<CommonResponse> list(){
 		List<BookResponse> result = new ArrayList<BookResponse>();
 		for (Book model : bookService.listAllBook()) {
 			result.add(getResponseFromModel(model));
 		}
-		return result;
+		
+		CommonResponse r = new CommonResponse("ok", "ok", result);
+		return new ResponseEntity<CommonResponse>(r, HttpStatus.OK);
+	}
+	
+	@GetMapping("/dash/count")
+	public ResponseEntity<CommonResponse> listCount(){
+		DashboardCount result = new DashboardCount();
+		result.setCountBooks(bookService.countBooks());
+		result.setCountUsers(bookService.countUsers());
+		result.setCountGenres(bookService.countGenres());
+
+		CommonResponse r = new CommonResponse("ok", "ok", result);
+		return new ResponseEntity<CommonResponse>(r, HttpStatus.OK);
 	}
 	
 	@GetMapping("/dash/recomend")
-	public List<RecomendCount> listRecomend(){
-		return bookService.listAllBookRecomend();
+	public ResponseEntity<CommonResponse> listRecomend(){
+		CommonResponse r;
+		try {
+			List<RecomendCount> result = bookService.listAllBookRecomend();
+			r = new CommonResponse("ok", "ok", result);
+		} catch (Exception e) {
+			r = new CommonResponse("error", e.getMessage(), null);
+		}
+		return new ResponseEntity<CommonResponse>(r, HttpStatus.OK);
 	}
 	
 	@GetMapping("/dash/recomendMonth/{id}")
-	public List<RecomendCount> listRecomendByMonth(@PathVariable String id) {
+	public ResponseEntity<CommonResponse> listRecomendByMonth(@PathVariable String id) {
+		CommonResponse r;
 		try {
 			String date = "01/" + id.substring(4, 6) + "/" + id.substring(0, 4);
 			LocalDate now =  LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 			LocalDate lastDayOfMonth = now.with(TemporalAdjusters.lastDayOfMonth());
 			Date startDate = Date.from(now.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			Date endDate = Date.from(lastDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			return bookService.listBookRecomendByMonth(startDate, endDate);
+			List<RecomendCount> result = bookService.listBookRecomendByMonth(startDate, endDate);
+			r = new CommonResponse("ok", "ok", result);
 		} catch (Exception e) {
-			return null;
+			r = new CommonResponse("error", e.getMessage(), null);
 		}
+		return new ResponseEntity<CommonResponse>(r, HttpStatus.OK);
 	}
 	
 	@GetMapping("/dash/genre/{id}")
-	public List<Book> listBookByGenre(@PathVariable Integer id){
-		return bookService.listBookByGenre(id);
+	public ResponseEntity<CommonResponse> listBookByGenre(@PathVariable Integer id){
+		CommonResponse r;
+		try {
+			List<Book> result = bookService.listBookByGenre(id);
+			r = new CommonResponse("ok", "ok", result);
+		} catch (Exception e) {
+			r = new CommonResponse("error", e.getMessage(), null);
+		}
+		return new ResponseEntity<CommonResponse>(r, HttpStatus.OK);
 	}
 	
 	@GetMapping("/dash/{id}")
-	public ResponseEntity<BookResponse> get(@PathVariable Integer id){
+	public ResponseEntity<CommonResponse> get(@PathVariable Integer id){
+		CommonResponse r;
 		try {
-			BookResponse book = getResponseFromModel(bookService.getBook(id));
-			return new ResponseEntity<BookResponse>(book, HttpStatus.OK);
+			BookResponse result = getResponseFromModel(bookService.getBook(id));
+			r = new CommonResponse("ok", "ok", result);
 		} catch (Exception e) {
-			return new ResponseEntity<BookResponse>(HttpStatus.NOT_FOUND);
+			r = new CommonResponse("error", e.getMessage(), null);
 		}
+		return new ResponseEntity<CommonResponse>(r, HttpStatus.OK);
 	}
 	
 	@PostMapping("")
 	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
-	public ResponseEntity<?> add(@RequestBody Book book) {
-		
+	public ResponseEntity<CommonResponse> add(@RequestBody Book book) {
+		CommonResponse r;
 		try {
 			bookService.saveBook(book);
-			return ResponseEntity.ok(new MessageResponse("Book inserted successfully!"));
+			r = new CommonResponse("ok", "ok", null);
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Book can't be inserted! e:" + e.getMessage()));
+			r = new CommonResponse("error", e.getMessage(), null);
 		}
+		return new ResponseEntity<CommonResponse>(r, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

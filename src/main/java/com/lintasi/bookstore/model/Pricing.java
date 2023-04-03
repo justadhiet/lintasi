@@ -2,6 +2,7 @@ package com.lintasi.bookstore.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ public class Pricing implements Serializable{
 	private int status;
 	private long discount;
 	private int timeRange;
+	private Date dateInsert;
 
 	public int getBookId() {
 		return bookId;
@@ -65,5 +67,13 @@ public class Pricing implements Serializable{
 	public void setTimeRange(int timeRange) {
 		this.timeRange = timeRange;
 	}
-	
+
+	public Date getDateInsert() {
+		return dateInsert;
+	}
+
+	public void setDateInsert(Date dateInsert) {
+		this.dateInsert = dateInsert;
+	}
+
 }

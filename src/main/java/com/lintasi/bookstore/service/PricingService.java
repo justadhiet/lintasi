@@ -1,6 +1,8 @@
 package com.lintasi.bookstore.service;
 
 import javax.transaction.Transactional;
+
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ public class PricingService {
 	
 	public void savePricing(Pricing price) {
 		price.setStatus(1);
+		price.setDateInsert(new Date());
 		pricingRepository.save(price);
 	}
 	

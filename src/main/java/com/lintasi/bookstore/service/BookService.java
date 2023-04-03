@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lintasi.bookstore.model.Book;
+import com.lintasi.bookstore.model.DashboardCount;
 import com.lintasi.bookstore.model.RecomendCount;
 import com.lintasi.bookstore.repository.BookRepository;
 
@@ -53,6 +54,18 @@ public class BookService {
 	
 	public long countFavoriteBook(Integer id) {
 		return bookRepository.countFavorite(id);
+	}
+	
+	public long countBooks() {
+		return bookRepository.countBooks();
+	}
+	
+	public long countGenres() {
+		return bookRepository.countGenres();
+	}
+	
+	public long countUsers() {
+		return bookRepository.countUsers();
 	}
 	
 	public Double countRateBook(Integer id) {
