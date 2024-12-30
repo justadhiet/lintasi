@@ -1,6 +1,5 @@
 package com.lintasi.bookstore.controller;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -139,7 +138,7 @@ public class BookController {
 	
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('EDITOR') or hasRole('ADMIN')")
-	public ResponseEntity<?> delete(@PathVariable Integer id) {
+	public ResponseEntity<MessageResponse>  delete(@PathVariable Integer id) {
 		try {
 			bookService.deleteBook(bookService.getBook(id));
 			return ResponseEntity.ok(new MessageResponse("Book deleted successfully!"));
